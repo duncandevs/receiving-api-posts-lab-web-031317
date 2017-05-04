@@ -1,3 +1,4 @@
+<!-- add new with js -->
 <h1>New Product</h1>
 <%= form_for @product do |f| %>
   <%= f.label :name %>
@@ -13,3 +14,22 @@
   <%= f.text_field :inventory %>
   <%= f.submit "submit" %>
 <% end %>
+<div id = "results"></div>
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+    $('form').submit(function(event) {
+      event.preventDefault();
+      //grab the form data and serialize it
+      var productValues = $(this).serialize();
+      // make a post request and pass in serialized data
+      var posting = $.post('/products',productValues);
+      posting.then(function(productJSON){
+        var productText = "";
+        for(attr in productJSON){
+          productText += `<li>${productJSON[attr]}</li>`
+        }
+        $('#results').append(`<ul>${productText}</ul>`);
+      })
+    });//end submit
+  });//end doc ready
+</script>
